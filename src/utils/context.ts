@@ -12,6 +12,5 @@ export const TwitterContext = createContext<ContextTypes>({
     },
     handleUrl: (url: string) => console.log(url),
     handleName: (name: string) => console.log(name),
-    handleFollowers: (followers: number) => console.log(followers),
-    handleFollowing: (following: number) => console.log(following),
+    handleStats: (field, value) => console.log(field, value),
 })

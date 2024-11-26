@@ -4,25 +4,17 @@ import {TwitterContext} from "../utils/context.js";
 import * as React from "react";
 
 const Stats = () => {
-    const {user, stats, handleFollowers, handleFollowing} = useContext(TwitterContext);
+    const {user, stats, handleStats} = useContext(TwitterContext);
 
-    const eventFollowing = (e:React.MouseEvent<HTMLDivElement>) => {
+    const eventStats = (e: React.MouseEvent<HTMLDivElement>) => {
+        const field = e.currentTarget.getAttribute('data-field') as keyof typeof stats;
+        if (!field) return;
         switch (e.button) {
             case 0:
-                return handleFollowing(1);
+                return handleStats(field, 1);
             case 2:
                 // e.preventDefault();
-                return handleFollowing(-1);
-        }
-    }
-
-    const eventFollowers = (e:React.MouseEvent<HTMLDivElement>) => {
-        switch (e.button) {
-            case 0:
-                return handleFollowers(1);
-            case 2:
-                // e.preventDefault();
-                return handleFollowers(-1);
+                return handleStats(field, -1);
         }
     }
 
@@ -36,10 +28,12 @@ const Stats = () => {
             </div>
 
             <div className={'stats'}>
-                <div style={{cursor: 'cell'}} onContextMenu={(e) => e.preventDefault()} onMouseDown={eventFollowers}>
+                <div style={{cursor: 'cell'}} data-field={'followers'} onContextMenu={(e) => e.preventDefault()}
+                     onMouseDown={eventStats}>
                     Followers : {stats.followers}
                 </div>
-                <div style={{cursor: 'cell'}} onContextMenu={(e) => e.preventDefault()} onMouseDown={eventFollowing}>
+                <div style={{cursor: 'cell'}} data-field={'following'} onContextMenu={(e) => e.preventDefault()}
+                     onMouseDown={eventStats}>
                     Following : {stats.following}
                 </div>
             </div>

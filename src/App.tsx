@@ -1,8 +1,11 @@
-import './App.tsx'
+import './App.css'
 import Navigation from "./components/Navigation.jsx";
 import Body from "./components/Body.jsx";
 import {useState} from "react";
 import {TwitterContext} from "./utils/context.js";
+import {StatsType} from "./utils/types";
+
+
 
 
 
@@ -20,10 +23,19 @@ const App = () => {
         following: 100,
     });
 
+    const isValidUrl = (url: string) => {
+        try {
+            new URL(url); // Бросит ошибку, если строка — не валидный URL
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
     const handleUrl = (url:string) => {
         setUser((prevState) => ({
             ...prevState,
-            avatar: url || user.avatar
+            avatar: isValidUrl(url) ? url : user.avatar,
         }))
     }
     const handleName = (name:string) => {
@@ -33,19 +45,14 @@ const App = () => {
         }))
     }
 
-    const handleFollowers = (n:number) => {
+    const handleStats = (field:keyof StatsType,value:number) => {
         setStats((prevState) => ({
             ...prevState,
-            followers: (prevState.followers + n >= 0 ? prevState.followers + n : prevState.followers)
+            [field]: (prevState[field] + value >= 0 ? prevState[field] + value : prevState[field])
         }))
     }
 
-    const handleFollowing = (n:number) => {
-        setStats((prevState) => ({
-            ...prevState,
-            following: (prevState.following + n >= 0 ? prevState.following + n : prevState.following)
-        }))
-    }
+
 
 
 
@@ -54,7 +61,7 @@ const App = () => {
     return (
         <div className={'app'}>
             <TwitterContext.Provider value={{
-                user, stats, handleUrl, handleName, handleFollowers, handleFollowing  //user:user , stats:stats
+                user, stats, handleUrl, handleName,  handleStats,  //user:user , stats:stats
             }}>
                 <Navigation/>
                 <Body/>
